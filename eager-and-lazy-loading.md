@@ -11,7 +11,9 @@ Imagine a page with rollover images like for menu items or navigation. There are
 - Load only the displayed images on page load and load the others if/when they are required (lazy); and
 - Load only the displayed images on page load. After the page has loaded preload the other images in the background in case you need them (over-eager).
 
-# Eager and Lazy loading database query in Yii
+
+# Eager and Lazy loading database query 
+## In Yii
 Eager loading executes just one query:
 
 ```
@@ -38,8 +40,24 @@ foreach ($comments as $comment)
 }
 ```
 
+## In Laravel
+### Eager loading using with()
+If we eager load using with(), for example:
+
+```
+$users = User::with('comments')->get();
+```
+
+if we have 5 users, the following two queries get run immediately:
+```
+select * from `users`
+select * from `comments` where `comments`.`user_id` in (1, 2, 3, 4, 5)
+```
+
+### “Lazy” eager loading using load()
 
 # References
 - https://stackoverflow.com/questions/1299374/what-is-eager-loading
 - https://www.yiiframework.com/forum/index.php/topic/34412-eager-loading-vs-lazy-loading/
+- https://laravel.com/docs/5.6/eloquent-relationships#eager-loading
 - 
