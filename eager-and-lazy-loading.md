@@ -11,6 +11,33 @@ Imagine a page with rollover images like for menu items or navigation. There are
 - Load only the displayed images on page load and load the others if/when they are required (lazy); and
 - Load only the displayed images on page load. After the page has loaded preload the other images in the background in case you need them (over-eager).
 
+# Eager and Lazy loading database query in Yii
+Eager loading executes just one query:
+
+```
+$comments = Comment::model()->with('issues')->findAll();
+// sql will get all comments with their issues all at once
+foreach ($comments as $comment)
+{
+    $issues = $comment->issues;
+    // $comment->issues is already populated
+    // you can just access it, no sql needs to be executed at this point
+}
+```
+
+Lazy loading executes 1 + N queries:
+
+```
+$comments = Comment::model()->findAll();
+// sql will get all comments, but not with their issues
+foreach ($comments as $comment)
+{
+    $issues = $comment->issues;
+    // $comment->issues is not populated at this point
+    // so, each comment object has to execute a sql to get related issues here
+}
+```
+
 
 # References
 - https://stackoverflow.com/questions/1299374/what-is-eager-loading
