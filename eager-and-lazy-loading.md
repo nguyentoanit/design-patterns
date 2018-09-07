@@ -49,12 +49,36 @@ $users = User::with('comments')->get();
 ```
 
 if we have 5 users, the following two queries get run immediately:
+
 ```
 select * from `users`
 select * from `comments` where `comments`.`user_id` in (1, 2, 3, 4, 5)
 ```
 
 ### “Lazy” eager loading using load()
+In this approach, we can separate the two queries, first by getting the initial result:
+
+```
+$users = User::all();
+```
+
+which runs:
+
+```
+select * from `users`
+```
+
+And later, if we decide(based on some condition) that we need the related comments for all these users, we can eager load them after the fact:
+
+```
+if($someCondition){
+  $users = $users->load('comments');
+}
+```
+
+And we end up with the same result, just split into two steps. Again, we can call `$users->comments->first()->body` to get to the related model for any item.
+
+
 
 # References
 - https://stackoverflow.com/questions/1299374/what-is-eager-loading
